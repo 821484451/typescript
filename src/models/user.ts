@@ -11,4 +11,11 @@ export default class User extends Model<User> {
     public id: number;
     @Column(DataType.CHAR)
     public userName: string;
+    @Column(DataType.CHAR)
+    public password: string;
+    @Column(DataType.CHAR)
+    public usercode: string;
+    @Column(DataType.INTEGER)
+    public status: number;
+
 }

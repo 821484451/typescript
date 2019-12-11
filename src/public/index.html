@@ -9,9 +9,22 @@
 <body>
     <div id="login">
         <h5>hello word!</h5>
+        <div>--------------登陆----------------</div>
         <input type="text" v-model="userName">
         <input type="text" v-model="password">
         <button @click="login">登陆</button>
+        <div>--------------注册--------注册用户状态，0为普通用户,1为管理员--------</div>
+        <input type="text" v-model="newUserName" placeholder="注册用户名">
+        <input type="text" v-model="newPassword" placeholder="注册用户密码">
+        <input type="text" v-model="userCode" placeholder="注册用户code">
+        <input type="text" v-model="status" placeholder="注册用户状态">
+        <button @click="register">注册</button>
+        <div>-------------获取列表----------------</div>
+        <table>
+            <thead>
+                <th v-for="i in 10" :id="'d' + i">{{i}}</th>
+            </thead>   
+        </table>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -23,19 +36,43 @@
         el: '#login',
         data: {
             userName: '',
-            password: ''
+            password: '',
+            newUserName: '',
+            newPassword: '',
+            userCode: '',
+            status: 0
         },
         methods: {
             login(){
-                axios.post('/user',qs.stringify({
+                axios.post('/login',qs.stringify({
                     userName: this.userName,
                     password: this.password
                 })).then(res => {
-                    console.log('登陆成功');
+                    if (res.data.status == 200) {
+                        alert('登陆成功');
+                    }else{
+                        alert(res.data.msg);
+                    }
                 }).catch(err => {
                     console.log(err);
                 })
-            }
+            },
+            register(){
+                axios.post('/register',qs.stringify({
+                    userName: this.newUserName,
+                    password: this.newPassword,
+                    usercode: this.userCode,
+                    status: this.status
+                })).then(res => {
+                    if (res.data.status == 200) {
+                        alert('注册成功');
+                    }else{
+                        alert(res.data.msg);
+                    }
+                }).catch(err => {
+                    console.log(err);
+                })
+            },
         },
         mounted(){
 

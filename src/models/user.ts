@@ -18,4 +18,8 @@ export default class User extends Model<User> {
     @Column(DataType.INTEGER)
     public status: number;
 
+    static async getList(){
+        return await this.findOne({raw: true});
+    }
+
 }

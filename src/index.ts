@@ -16,26 +16,27 @@ const database = new Sequelize({
   username: 'root',
   password: 'root',
   dialect: 'mysql',
-  modelPaths: [`${__dirname}/models`]
+  models: [`${__dirname}/models`]
 });
-//database.sync({force: true})//自动同步数据库
+database.sync({force: true})//自动同步数据库
 
-// 签名key keys作用 用来对cookie进行签名 
+// // 签名key keys作用 用来对cookie进行签名 
 app.keys = ['some secret'];
 // 配置项 
 const SESS_CONFIG = { 
-  key: 'kkb:sess', // cookie键名 
+  key: 'koa:sess', // cookie键名 
   maxAge: 86400000, // 有效期，默认一天 
   httpOnly: true, // 仅服务器修改 
   signed: true, // 签名cookie 
 };
-// 注册 
+//注册 
 app.use(session(SESS_CONFIG, app));
 app.use((ctx, next) => { 
   if (ctx.url == '/register' || ctx.url == '/' || ctx.url.indexOf('login') > -1) { 
     next() 
   } else { 
-    if (!ctx.session.userinfo) { 
+    console.log(ctx.session);
+    if (!ctx.session.userInfo) { 
       ctx.body = { message: "登录失败" } 
     } else { 
       next() 

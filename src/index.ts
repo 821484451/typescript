@@ -40,7 +40,6 @@ app.use(async (ctx, next) => {
   if (ctx.url == '/register' || ctx.url == '/' || ctx.url.indexOf('login') > -1) { 
     await next() 
   } else { 
-    console.log(ctx.session);
     if (JSON.stringify(ctx.session) == "{}" || !ctx.session.userInfo) { 
       ctx.body = { message: "登录失败" } 
     } else { 

@@ -49,20 +49,14 @@ export default class User {
             userName: name,
             password: password
         }});
-        console.log(data);
-        console.log('______________________________');
+      
         if(data) {
-            console.log(111111111);
-            console.log(ctx);
-           
             ctx.session.userInfo = name;
-            console.log(ctx.session)
             ctx.body = {status: 200, data: data, msg: "登陆成功！"}; 
         }else{
-            console.log(2222222222);
+           
             ctx.body = {status: 500, data: data, msg: "登陆失败！"}; 
         }
-        console.log('______________________________');
     }
     @post('/register',{
         middleware: [

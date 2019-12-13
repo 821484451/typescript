@@ -2,32 +2,18 @@ import * as Koa from 'koa';
 import {get , post} from '../utils/route-decors';
 import model from '../models/user';
 
-
-// @middlewares([
-//     async function guard(ctx: Koa.Context, next: () => Promise<any>) {
-//         console.log('guard', ctx.header);
-
-//         if (ctx.header.token) {
-//             await next();
-//         }else {
-//             throw "请登录";
-//         }
-//     }
-// ])
-
 export default class User {
     @get('/user', {
         middleware: [
             async function test(ctx: Koa.Context, next: ()=> Promise<any>) {
-                next();
+            
+                await next();
             }
         ]
     })
-    public async list(ctx: Koa.Context) {
-  
-        let res = await model.findAll();
-        console.log('res', res);
-        ctx.body = {status: 200, data: res};
+    public async list(ctx) {
+        let res = await model.findAll({raw: true});
+        ctx.body = {status: 200, data: res}
         
         
     };
@@ -58,26 +44,25 @@ export default class User {
     public async login(ctx: Koa.Context) {
         let name = ctx.request.body.userName;
         let password = ctx.request.body.password;
-        console.log(name);
-        console.log(ctx.session);
-        ctx.session.userInfo = password;
-        ctx.body = {status: 200, msg: "登陆成功"}
-        
+       
+        const data =await model.findOne({raw: true, where: {
+            userName: name,
+            password: password
+        }});
+        console.log(data);
+        console.log('______________________________');
+        if(data) {
+            console.log(111111111);
+            console.log(ctx);
            
-        
-        
-
-
-     
-        // const data = res.dataValues;
-        
-        // if(data.length > 0) {
-        //     ctx.session.userinfo = name;
-        //     ctx.body = {status: 200, data: data, msg: "登陆成功！"}; 
-        // }else{
-        //     ctx.body = {status: 500, data: data, msg: "登陆失败！"}; 
-        // }
-         
+            ctx.session.userInfo = name;
+            console.log(ctx.session)
+            ctx.body = {status: 200, data: data, msg: "登陆成功！"}; 
+        }else{
+            console.log(2222222222);
+            ctx.body = {status: 500, data: data, msg: "登陆失败！"}; 
+        }
+        console.log('______________________________');
     }
     @post('/register',{
         middleware: [
@@ -117,6 +102,7 @@ export default class User {
         const status = ctx.request.body.status;
         const res = await model.create({userName: name, password: password,
         usercode: usercode, status: status});
+        console.log(res);
         ctx.body = {status: 200, data: res, msg: "注册成功！"};  
     }
 }

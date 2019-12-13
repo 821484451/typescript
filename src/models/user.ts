@@ -1,8 +1,8 @@
 import { Table, Column, Model, DataType} from 'sequelize-typescript';
 
-@Table({modelName: 'User'})
+@Table({})
 
-export default class User extends Model<User> {
+class User extends Model<User> {
     @Column({
         primaryKey: true,
         autoIncrement: true,
@@ -18,8 +18,5 @@ export default class User extends Model<User> {
     @Column(DataType.INTEGER)
     public status: number;
 
-    static async getList(){
-        return await this.findOne({raw: true});
-    }
-
 }
+export default User;

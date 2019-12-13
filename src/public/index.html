@@ -20,6 +20,7 @@
         <input type="text" v-model="status" placeholder="注册用户状态">
         <button @click="register">注册</button>
         <div>-------------获取列表----------------</div>
+        <button @click="getList">获取列表</button>
         <table>
             <thead>
                 <th v-for="i in 10" :id="'d' + i">{{i}}</th>
@@ -73,6 +74,15 @@
                     console.log(err);
                 })
             },
+            getList(){
+                axios.get('/user',{
+                    
+                }).then(res => {
+                   
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
         },
         mounted(){
 

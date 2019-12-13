@@ -22,7 +22,7 @@ type RouteOptions = {
 };
 const router = new KoaRouter();
 const decorate = (method: HTTPMethod, path: string, options: RouteOptions ={}, router: KoaRouter) => {
-    return function(target, property:string) {
+    return (target, property:string) => {
         process.nextTick(() => {
             // 添加中间件数组
             const middlewares = []
@@ -43,7 +43,7 @@ const decorate = (method: HTTPMethod, path: string, options: RouteOptions ={}, r
     }
     
 }
-const method = method => (path: string, options?: RouteOptions) => decorate(method, path, options, router)
+const method = methodName => (path: string, options?: RouteOptions) => decorate(methodName, path, options, router)
 
 export const get = method('get');
 export const post = method('post');

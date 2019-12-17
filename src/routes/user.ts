@@ -6,16 +6,22 @@ export default class User {
     @get('/user', {
         middleware: [
             async function test(ctx: Koa.Context, next: ()=> Promise<any>) {
-            
+             
+                const userName = ctx.request.query.userName;
+                console.log(userName);
+                const dataOne = await model.findAll({raw: true, where: {userName: userName}});
+                
+                if ( !userName || dataOne[0].status == 0) {
+                    ctx.body = {status: 401, msg: '对不起，你没有权限！', data: []}
+                    return
+                }
                 await next();
             }
         ]
     })
     public async list(ctx) {
         let res = await model.findAll({raw: true});
-        ctx.body = {status: 200, data: res}
-        
-        
+        ctx.body = {status: 200, data: res};
     };
     @post('/login',{
         middleware: [

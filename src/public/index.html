@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        table{
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+        }
+        td,th{
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+        }
+    </style>
 </head>
 <body>
     <div id="login">
@@ -20,11 +30,18 @@
         <input type="text" v-model="status" placeholder="注册用户状态">
         <button @click="register">注册</button>
         <div>-------------获取列表----------------</div>
-        <button @click="getList">获取列表</button>
+        <input type="text" v-model="cherifyName"><button @click="getList">获取列表</button>
         <table>
             <thead>
-                <th v-for="i in 10" :id="'d' + i">{{i}}</th>
-            </thead>   
+                <tr>
+                    <th v-for="(item,i) in fieldArr" :id="'d' + i">{{item}}</th>
+                </tr>
+            </thead>  
+            <tbody>
+                <tr v-for="(item1 , k) in userList" :key="k + 'a'">
+                    <td v-for="(field , j) in fieldArr" :key="j +'b'">{{item1[field]}}</td>
+                </tr>
+            </tbody> 
         </table>
     </div>
 </body>
@@ -36,12 +53,15 @@
     var test = new Vue({
         el: '#login',
         data: {
+            cherifyName: '',
             userName: '',
             password: '',
             newUserName: '',
             newPassword: '',
             userCode: '',
-            status: 0
+            status: 0,
+            userList: [],
+            fieldArr: ['id', 'userName', 'password', 'usercode', 'status', 'createdAt', 'updatedAt']
         },
         methods: {
             login(){
@@ -76,9 +96,16 @@
             },
             getList(){
                 axios.get('/user',{
-                    
+                    params: {                    
+                        userName: this.cherifyName
+                    }
                 }).then(res => {
-                   
+                    let data = res.data;
+                    if (data.status == 200) {
+                        this.userList = res.data.data;
+                    }else{
+                        alert(data.msg);
+                    }
                 }).catch(err => {
                     console.log(err);
                 })

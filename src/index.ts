@@ -41,7 +41,7 @@ app.use(async (ctx, next) => {
     await next() 
   } else { 
     if (JSON.stringify(ctx.session) == "{}" || !ctx.session.userInfo) { 
-      ctx.body = { message: "登录失败" } 
+      ctx.body = {status: 403, msg: "未登录！", data: [] } 
     } else { 
       await next() 
     } 

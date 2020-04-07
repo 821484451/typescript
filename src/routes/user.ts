@@ -1,6 +1,7 @@
 import * as Koa from 'koa';
 import {get , post} from '../utils/route-decors';
 import model from '../models/user';
+import koaBody from 'koa-body';
 
 export default class User {
     @get('/user', {
@@ -8,7 +9,6 @@ export default class User {
             async function test(ctx: Koa.Context, next: ()=> Promise<any>) {
              
                 const userName = ctx.request.query.userName;
-                console.log(userName);
                 const dataOne = await model.findAll({raw: true, where: {userName: userName}});
                 
                 if ( !userName || dataOne[0].status == 0) {
@@ -104,5 +104,25 @@ export default class User {
         usercode: usercode, status: status});
         console.log(res);
         ctx.body = {status: 200, data: res, msg: "注册成功！"};  
+    }
+    @get('/delete', {
+            middleware: [async function(ctx: Koa.Context, next: ()=>Promise<any>){await next()}]
+        }
+    )
+    public async delete(ctx: Koa.Context){
+        const id = ctx.request.query.id;
+        console.log('++++++++++++++++++++++++++++++++++++++');
+        const res = await model.destroy({
+            where: {
+              id: id,
+            }
+        });
+        console.log('------------------------------------------');
+        ctx.body = {
+            status: 200,
+            data: res,
+            msg: "删除成功！"
+        };
+        console.log('*******************************************');
     }
 }
